@@ -12,7 +12,8 @@
     "dist": "electron-builder",
     "dist:win": "electron-builder --win portable",
     "dist:mac": "electron-builder --mac",
-    "dist:linux": "electron-builder --linux AppImage"
+    "dist:linux": "electron-builder --linux AppImage",
+    "icon": "node scripts/make-icon.js"
   },
   "dependencies": {
     "archiver": "^7.0.1",
@@ -37,22 +38,40 @@
       "target": [
         {
           "target": "portable",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
-      ],
-      "signAndEditExecutable": false
+      ]
     },
     "portable": {
       "artifactName": "bin2png-portable.exe"
     },
     "mac": {
-      "target": ["dir", "zip"],
-      "category": "public.app-category.utilities"
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.utilities",
+      "identity": "-",
+      "artifactName": "bin2png-mac-${arch}.${ext}"
     },
     "linux": {
-      "target": ["AppImage"],
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "category": "Utility",
-      "artifactName": "bin2png-${version}-${arch}.AppImage"
+      "artifactName": "bin2png-linux-${arch}.${ext}"
     }
   }
 }

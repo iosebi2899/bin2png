@@ -67,7 +67,7 @@ function createPanel(cfg) {
           { title: it.path },
           el('span', { class: 'kind' }, cfg.kindLabel(it)),
           el('span', { class: 'name' }, it.name),
-          el('span', { class: 'meta' }, it.isDirectory ? it.dir : formatBytes(it.size)),
+          el('span', { class: it.isDirectory ? 'meta path' : 'meta' }, it.isDirectory ? el('bdi', {}, it.dir) : formatBytes(it.size)),
           el('button', {
             class: 'remove',
             title: 'Remove',

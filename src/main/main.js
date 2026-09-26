@@ -17,6 +17,7 @@ function createWindow() {
     minHeight: 620,
     backgroundColor: '#0e1016',
     title: 'Bin2PNG Studio',
+    icon: path.join(__dirname, '..', 'assets', 'icon.png'),
     autoHideMenuBar: true,
     show: false,
     webPreferences: {

@@ -1,0 +1,58 @@
+name: Build & Release
+
+# Push a tag like v1.0.1 to build Windows, macOS and Linux and publish a GitHub Release.
+# "Run workflow" on the Actions tab does a test build (downloadable artifacts, no release).
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            name: windows
+            build: npm run dist:win -- --publish never
+            files: dist/*.exe
+          - os: macos-latest
+            name: macos
+            build: npm run dist:mac -- --publish never
+            files: dist/*.zip
+          - os: ubuntu-latest
+            name: linux
+            build: npm run dist:linux -- --publish never
+            files: dist/*.AppImage
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm test
+
+      - name: Build
+        run: ${{ matrix.build }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bin2png-${{ matrix.name }}
+          path: ${{ matrix.files }}
+          if-no-files-found: error
+
+      - name: Attach to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.files }}
