@@ -1,0 +1,58 @@
+{
+  "name": "bin2png-studio",
+  "productName": "Bin2PNG Studio",
+  "version": "1.0.0",
+  "description": "Losslessly convert any file or folder into PNG chunks (for Google Photos storage) and restore it back.",
+  "main": "src/main/main.js",
+  "author": "Bin2PNG Studio",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/roundtrip.test.js",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win portable",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux AppImage"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "pngjs": "^7.0.0",
+    "yauzl": "^3.2.0"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.bin2png.studio",
+    "productName": "Bin2PNG Studio",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "bin2png-portable.exe"
+    },
+    "mac": {
+      "target": ["dir", "zip"],
+      "category": "public.app-category.utilities"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "category": "Utility",
+      "artifactName": "bin2png-${version}-${arch}.AppImage"
+    }
+  }
+}

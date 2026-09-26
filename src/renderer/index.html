@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:;" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bin2PNG Studio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <div>
+        <h1>Bin2PNG Studio</h1>
+        <p class="tagline">Lossless file ⇄ PNG conversion for Google Photos storage</p>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" role="tab" data-tab="encode" aria-selected="true">
+        <span class="tab-title">Encode</span>
+        <span class="tab-sub">File / Folder → PNG Chunks</span>
+      </button>
+      <button class="tab" role="tab" data-tab="decode" aria-selected="false">
+        <span class="tab-title">Decode</span>
+        <span class="tab-sub">PNGs / Photos ZIP → Original</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ================= ENCODE ================= -->
+    <section class="panel active" id="panel-encode" role="tabpanel">
+      <div class="dropzone" id="enc-drop" tabindex="0">
+        <svg class="drop-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0-4 4m4-4 4 4M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" /></svg>
+        <p class="drop-title">Drop a file or folder here</p>
+        <p class="drop-hint">Any type and size — folders are packed into a ZIP, existing .zip files are used as-is</p>
+        <div class="drop-actions">
+          <button class="btn secondary" data-pick="file">Browse File…</button>
+          <button class="btn secondary" data-pick="folder">Browse Folder…</button>
+        </div>
+      </div>
+      <ul class="selection" id="enc-selection" hidden></ul>
+
+      <div class="settings">
+        <label class="field">
+          <span class="label">Chunk size</span>
+          <div class="input-group">
+            <input type="number" id="enc-chunk" min="1" max="180" step="1" value="30" />
+            <span class="suffix">MB</span>
+            <select id="enc-chunk-preset" aria-label="Chunk size preset">
+              <option value="">Presets</option>
+              <option value="10">10 MB</option>
+              <option value="30">30 MB (default)</option>
+              <option value="50">50 MB</option>
+              <option value="100">100 MB</option>
+              <option value="175">175 MB (max)</option>
+            </select>
+          </div>
+          <span class="help">Payload per PNG. Google Photos accepts images up to 200 MB.</span>
+        </label>
+        <label class="field">
+          <span class="label">PNG compression</span>
+          <select id="enc-deflate">
+            <option value="1">Fast (level 1)</option>
+            <option value="6" selected>Balanced (level 6)</option>
+            <option value="9">Maximum (level 9)</option>
+          </select>
+          <span class="help">Lossless either way — only affects speed and PNG size.</span>
+        </label>
+        <div class="field wide">
+          <span class="label">Output directory</span>
+          <div class="path-row">
+            <input type="text" id="enc-output" placeholder="Select an input first" spellcheck="false" />
+            <button class="btn secondary" id="enc-output-btn">Change…</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="enc-start" disabled>Convert to PNGs</button>
+        <button class="btn ghost" id="enc-cancel" hidden>Cancel</button>
+      </div>
+
+      <div class="progress-card" id="enc-progress" hidden>
+        <div class="progress-head">
+          <span class="status" id="enc-status">Preparing…</span>
+          <span class="percent" id="enc-percent">0%</span>
+        </div>
+        <div class="bar"><div class="fill" id="enc-fill"></div></div>
+      </div>
+
+      <div class="banner" id="enc-result" hidden></div>
+    </section>
+
+    <!-- ================= DECODE ================= -->
+    <section class="panel" id="panel-decode" role="tabpanel">
+      <div class="dropzone" id="dec-drop" tabindex="0">
+        <svg class="drop-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h3l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Zm8 3v6m0 0-3-3m3 3 3-3" /></svg>
+        <p class="drop-title">Drop a Google Photos ZIP, a folder of PNGs, or PNG files</p>
+        <p class="drop-hint">File names don't matter — chunks are identified by the header inside each image</p>
+        <div class="drop-actions">
+          <button class="btn secondary" data-pick="files">Browse ZIP / PNGs…</button>
+          <button class="btn secondary" data-pick="folder">Browse Folder…</button>
+        </div>
+      </div>
+      <ul class="selection" id="dec-selection" hidden></ul>
+
+      <div class="settings">
+        <label class="field wide checkbox">
+          <input type="checkbox" id="dec-extract" checked />
+          <span>
+            <span class="label">Auto-extract archive if the source was an archived folder/file</span>
+            <span class="help">Otherwise the intermediate ZIP is saved as-is.</span>
+          </span>
+        </label>
+        <div class="field wide">
+          <span class="label">Output destination</span>
+          <div class="path-row">
+            <input type="text" id="dec-output" placeholder="Select an input first" spellcheck="false" />
+            <button class="btn secondary" id="dec-output-btn">Change…</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="dec-start" disabled>Restore Original File</button>
+        <button class="btn ghost" id="dec-cancel" hidden>Cancel</button>
+      </div>
+
+      <div class="progress-card" id="dec-progress" hidden>
+        <div class="progress-head">
+          <span class="status" id="dec-status">Preparing…</span>
+          <span class="percent" id="dec-percent">0%</span>
+        </div>
+        <div class="bar"><div class="fill" id="dec-fill"></div></div>
+      </div>
+
+      <div class="banner" id="dec-result" hidden></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
