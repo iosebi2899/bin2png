@@ -14,7 +14,7 @@
 
 </div>
 
-Bin2PNG Studio is a desktop app that converts **any file or folder** (videos, ISOs, archives, whole project folders) into ordinary-looking PNG images. You can upload those images to Google Photos. Later you can turn them back into the exact original, straight from the ZIP Google Photos gives you when you download. Every chunk is checked with SHA-256, so you know the restore is bit-perfect.
+Bin2PNG Studio is a desktop app that converts **any file or folder** (videos, ISOs, archives, whole project folders) into ordinary-looking PNG images. You can upload those images to Google Photos (Some users might have unlimited storage there so that's the whole purpose of this coverter). Later you can turn them back into the exact original, straight from the ZIP Google Photos gives you when you download. Every chunk is checked with SHA-256, so you know the restore is bit-perfect.
 
 <p align="center">
   <img src="docs/screenshot-encode.png" width="49%" alt="Encode tab: a folder converted into 142 PNG chunks" />
